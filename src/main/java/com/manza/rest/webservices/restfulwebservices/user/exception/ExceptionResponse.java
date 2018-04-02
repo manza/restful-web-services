@@ -1,4 +1,4 @@
-package com.in28minutes.rest.webservices.restfulwebservices.user.exception;
+package com.manza.rest.webservices.restfulwebservices.user.exception;
 
 import java.util.Date;
 

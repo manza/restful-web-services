@@ -1,7 +1,7 @@
-package com.in28minutes.rest.webservices.restfulwebservices.user;
+package com.manza.rest.webservices.restfulwebservices.user;
 
-import com.in28minutes.rest.webservices.restfulwebservices.user.exception.UserInvalidException;
-import com.in28minutes.rest.webservices.restfulwebservices.user.exception.UserNotFoundException;
+import com.manza.rest.webservices.restfulwebservices.user.exception.UserInvalidException;
+import com.manza.rest.webservices.restfulwebservices.user.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
