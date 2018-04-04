@@ -3,6 +3,8 @@ package com.manza.rest.webservices.restfulwebservices.user;
 import com.manza.rest.webservices.restfulwebservices.user.exception.UserInvalidException;
 import com.manza.rest.webservices.restfulwebservices.user.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -27,18 +30,23 @@ public class UserResource {
     }
 
     @GetMapping(path = "/users/{userId}")
-    public User findOneUser(@PathVariable int userId) {
+    public Resource<User> findOneUser(@PathVariable int userId) {
         User user = userDaoService.findOne(userId);
 
         if (user == null) {
             throw new UserNotFoundException("id-" + userId);
         }
 
-        return user;
+        // HATEOAS
+        Resource<User> resource = new Resource<>(user);
+        ControllerLinkBuilder allUsersLink = ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(this.getClass()).findAllUsers());
+        resource.add(allUsersLink.withRel("all-users"));
+
+        return resource;
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Object> createUser(@RequestBody User user) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
         if ((user.getName().equals("")) || (user.getBirthDate() == null)) {
             throw new UserInvalidException("User name or Birth Date is invalid");
         }
@@ -56,7 +64,10 @@ public class UserResource {
     }
 
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable int userId) {
-        return ResponseEntity.ok(userDaoService.deleteUser(userId));
+    public void deleteUser(@PathVariable int userId) {
+        User user = userDaoService.deleteUser(userId);
+
+        if (user == null)
+            throw new UserNotFoundException("id - " + userId);
     }
 }
