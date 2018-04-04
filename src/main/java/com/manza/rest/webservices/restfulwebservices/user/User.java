@@ -2,12 +2,15 @@ package com.manza.rest.webservices.restfulwebservices.user;
 
 import com.manza.rest.webservices.restfulwebservices.post.Post;
 
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
 public class User {
 
     private Integer id;
+
+    @Size(min = 2)
     private String name;
     private Date birthDate;
     private List<Post> posts;
